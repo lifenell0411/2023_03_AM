@@ -75,24 +75,29 @@ public class Main {
 
 			else if (command.startsWith("article delete ")) {
 				String[] cmdDiv = command.split(" ");
+				if (cmdDiv.length < 3) {
+					System.out.println("명령어를 확인해주세요");
+					continue;
+				}
 				int id = Integer.parseInt(cmdDiv[2]);
 
-				Article foundArticle = null;
+				int foundIndex = -1;
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
 
-					if (foundArticle == null) {
-						System.out.println(id + "번 게시물은 존재하지 않습니다.");
-						continue;
-					} else {
-						articles.remove(i);
-						System.out.println(id + "번 게시물이 삭제되었습니다.");
+					if (article.id == id) {
+
+						foundIndex = i;
+						break;
+
 					}
 				}
+				if (foundIndex == -1) {
+					System.out.println(id + "번 게시물은 존재하지 않습니다.");
+					continue;
+				}
+				articles.remove(foundIndex);
+				System.out.println(id + "번 게시물이 삭제되었습니다.");
 			}
 
 			else if (command.equals("article write")) {
@@ -112,6 +117,7 @@ public class Main {
 				System.out.println("존재하지 않는 명령어입니다.");
 
 			}
+
 		}
 
 		System.out.println("==프로그램 끝==");
