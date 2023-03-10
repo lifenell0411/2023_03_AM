@@ -36,14 +36,15 @@ public class Main {
 				else {
 					for (int i = articles.size() - 1; i >= 0; i--) {
 						Article article = articles.get(i);
-						System.out.println("번호" + "  //  " + "제목");
-						System.out.println(article.id + "    //  " + article.title);
+						System.out.println("번호" + "  //  " + "제목" + "     //   " + "조회");
+						System.out.println(article.id + "    //  " + article.title + "   //   " + article.hitCount);
 					}
 				}
 
 			}
 
 			else if (command.startsWith("article detail ")) {
+
 				String[] cmdDiv = command.split(" ");
 				if (cmdDiv.length < 3) {
 					System.out.println("명령어를 확인해주세요");
@@ -65,11 +66,13 @@ public class Main {
 					System.out.println(id + "번 게시물은 존재하지 않습니다.");
 					continue;
 				}
-
+				foundArticle.hitCount++;
 				System.out.println("번호 : " + foundArticle.id);
-				System.out.println("날짜:" + foundArticle.regDate);
+				System.out.println("작성날짜:" + foundArticle.regDate);
+				System.out.println("수정날짜:" + foundArticle.updateDate);
 				System.out.println("제목:" + foundArticle.title);
 				System.out.println("내용:" + foundArticle.body);
+				System.out.println("조회수:" + foundArticle.hitCount);
 
 			}
 
@@ -100,6 +103,41 @@ public class Main {
 				System.out.println(id + "번 게시물이 삭제되었습니다.");
 			}
 
+			else if (command.startsWith("article modify ")) {
+
+				String[] cmdDiv = command.split(" ");
+				if (cmdDiv.length < 3) {
+					System.out.println("명령어를 확인해주세요");
+					continue;
+				}
+				int id = Integer.parseInt(cmdDiv[2]);
+
+				Article foundArticle = null;
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+
+					if (article.id == id) {
+						foundArticle = article;
+						break;
+
+					}
+				}
+				if (foundArticle == null) {
+					System.out.println(id + "번 게시물은 존재하지 않습니다.");
+					continue;
+				}
+
+				System.out.print("제목 : ");
+				String updateDate = Util.getNowDateTimeStr();
+				String newtitle = sc.nextLine();
+				System.out.print("내용 : ");
+				String newbody = sc.nextLine();
+				System.out.println(id + "번글이 수정되었습니다.");
+				foundArticle.title = newtitle;
+				foundArticle.body = newbody;
+				foundArticle.updateDate = updateDate;
+			}
+
 			else if (command.equals("article write")) {
 				int id = lastId + 1;
 				System.out.print("제목 : ");
@@ -109,7 +147,7 @@ public class Main {
 				String body = sc.nextLine();
 				System.out.println(id + "번글이 생성되었습니다.");
 				lastId++;
-				Article article = new Article(id, regDate, title, body);
+				Article article = new Article(id, regDate, regDate, title, body);
 				articles.add(article);
 			}
 
@@ -124,21 +162,24 @@ public class Main {
 
 		sc.close();
 	}
-}
 
-class Article {
+	static class Article {
 
-	int id;
-	String title;
-	String body;
-	String regDate;
-	String updateDate;
+		int id;
+		String title;
+		String body;
+		String regDate;
+		String updateDate;
+		int hitCount;
 
-	public Article(int id, String regDate, String title, String body) {
-		this.id = id;
-		this.regDate = regDate;
-		this.title = title;
-		this.body = body;
+		public Article(int id, String regDate, String updateDate, String title, String body) {
+			this.id = id;
+			this.regDate = regDate;
+			this.title = title;
+			this.body = body;
+			this.hitCount = 0;
+			this.updateDate = updateDate;
+		}
+
 	}
-
 }
