@@ -1,20 +1,19 @@
 package com.KoreaIT.java.AM;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	static List<Article> articles = new ArrayList<>();
 
 	public static void main(String[] args) {
 		System.out.println("==프로그램 시작==");
 
 		Scanner sc = new Scanner(System.in);
-		int lastId = 0;
-		List<Article> articles = new ArrayList<>();
+		int lastId = 3;
 
+		makeTestData();
 		while (true) {
 
 			System.out.print("명령어 > ");
@@ -163,6 +162,14 @@ public class Main {
 		sc.close();
 	}
 
+	public static void makeTestData() {
+
+		System.out.println("테스트를 위한 데이터를 생성합니다.");
+		articles.add(new Article(1, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "제목1", "내용1", 11));
+		articles.add(new Article(2, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "제목2", "내용2", 22));
+		articles.add(new Article(3, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "제목3", "내용3", 33));
+	}
+
 	static class Article {
 
 		int id;
@@ -172,14 +179,17 @@ public class Main {
 		String updateDate;
 		int hitCount;
 
-		public Article(int id, String regDate, String updateDate, String title, String body) {
+		public Article(int id, String regDate, String updateDate, String title, String body, int hitCount) {
+
 			this.id = id;
 			this.regDate = regDate;
 			this.title = title;
 			this.body = body;
-			this.hitCount = 0;
 			this.updateDate = updateDate;
 		}
 
+		public Article(int id, String regDate, String updateDate, String title, String body) {
+			this(id, regDate, updateDate, title, body, 0);
+		}
 	}
 }
