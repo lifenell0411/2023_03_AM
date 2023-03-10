@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Main {
 	static List<Article> articles = new ArrayList<>();
+	static List<Member> members = new ArrayList<>();
 
 	public static void main(String[] args) {
 		System.out.println("==프로그램 시작==");
@@ -27,17 +28,31 @@ public class Main {
 			if (command.equals("exit")) {
 				break;
 			}
-			if (command.equals("article list")) {
+
+			if (command.startsWith("article list")) {
 				if (articles.size() == 0) {
 					System.out.println("게시글이 없습니다.");
+					continue;
+				}
+				String searchKeyword = command.substring("article list".length()).trim();
+				List<Article> forPrintArticles = articles;
+				if (searchKeyword.length() > 0) {
+					forPrintArticles = new ArrayList<>();
+					for (Article article : articles) {
+						if (article.title.contains(searchKeyword)) {
+							forPrintArticles.add(article);
+						}
+					}
+					if (forPrintArticles.size() == 0) {
+						System.out.println("검색결과가 없습니다.");
+						continue;
+					}
 				}
 
-				else {
-					for (int i = articles.size() - 1; i >= 0; i--) {
-						Article article = articles.get(i);
-						System.out.println("번호" + "  //  " + "제목" + "     //   " + "조회");
-						System.out.println(article.id + "    //  " + article.title + "   //   " + article.hitCount);
-					}
+				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
+					Article article = forPrintArticles.get(i);
+					System.out.println("번호" + "  //  " + "제목" + "     //   " + "조회");
+					System.out.println(article.id + "    //  " + article.title + "   //   " + article.hitCount);
 				}
 
 			}
@@ -123,6 +138,15 @@ public class Main {
 				lastId++;
 				Article article = new Article(id, regDate, regDate, title, body);
 				articles.add(article);
+
+			} else if (command.equals("member join")) {
+				System.out.print("아이디 : ");
+				String memberId = sc.nextLine();
+				System.out.print("패스워드 : ");
+				String memberPw = sc.nextLine();
+
+				Member member = new Member(memberId, memberPw);
+				members.add(member);
 			}
 
 			else {
@@ -139,25 +163,29 @@ public class Main {
 	}
 
 	public static int getArticeIndexbyId(int id) {
-		for (int i = 0; i < articles.size(); i++) {
-			Article article = articles.get(i);
-
+		int i = 0;
+		for (Article article : articles) {
 			if (article.id == id) {
-
 				return i;
 
 			}
+			i++;
 		}
 		return -1;
 	}
 
 	public static Article getArticleById(int id) {
-		for (Article article : articles) {
+//		for (Article article : articles) {
+//
+//			if (article.id == id) {
+//				return article;
+//
+//			}
+//		}
 
-			if (article.id == id) {
-				return article;
-
-			}
+		int index = getArticeIndexbyId(id);
+		if (index != -1) {
+			return articles.get(index);
 		}
 		return null;
 	}
@@ -192,4 +220,16 @@ public class Main {
 			this(id, regDate, updateDate, title, body, 0);
 		}
 	}
+}
+
+class Member {
+
+	String memberId;
+	String memberPw;
+
+	public Member(String memberId, String memberPw) {
+		this.memberId = memberId;
+		this.memberPw = memberPw;
+	}
+
 }
