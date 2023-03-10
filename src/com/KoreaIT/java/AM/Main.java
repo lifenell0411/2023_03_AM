@@ -51,16 +51,8 @@ public class Main {
 				}
 				int id = Integer.parseInt(cmdDiv[2]);
 
-				Article foundArticle = null;
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
+				Article foundArticle = getArticleById(id);
 
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-
-					}
-				}
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시물은 존재하지 않습니다.");
 					continue;
@@ -83,17 +75,8 @@ public class Main {
 				}
 				int id = Integer.parseInt(cmdDiv[2]);
 
-				int foundIndex = -1;
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
+				int foundIndex = getArticeIndexbyId(id);
 
-					if (article.id == id) {
-
-						foundIndex = i;
-						break;
-
-					}
-				}
 				if (foundIndex == -1) {
 					System.out.println(id + "번 게시물은 존재하지 않습니다.");
 					continue;
@@ -111,16 +94,8 @@ public class Main {
 				}
 				int id = Integer.parseInt(cmdDiv[2]);
 
-				Article foundArticle = null;
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
+				Article foundArticle = getArticleById(id);
 
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-
-					}
-				}
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시물은 존재하지 않습니다.");
 					continue;
@@ -160,6 +135,31 @@ public class Main {
 		System.out.println("==프로그램 끝==");
 
 		sc.close();
+
+	}
+
+	public static int getArticeIndexbyId(int id) {
+		for (int i = 0; i < articles.size(); i++) {
+			Article article = articles.get(i);
+
+			if (article.id == id) {
+
+				return i;
+
+			}
+		}
+		return -1;
+	}
+
+	public static Article getArticleById(int id) {
+		for (Article article : articles) {
+
+			if (article.id == id) {
+				return article;
+
+			}
+		}
+		return null;
 	}
 
 	public static void makeTestData() {
