@@ -13,7 +13,7 @@ public class Main {
 
 		Scanner sc = new Scanner(System.in);
 		int lastId = 3;
-
+		int lastMemberId = 0;
 		makeTestData();
 		while (true) {
 
@@ -48,10 +48,10 @@ public class Main {
 						continue;
 					}
 				}
-
+				System.out.println("번호" + "  //  " + "제목" + "     //   " + "조회");
 				for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 					Article article = forPrintArticles.get(i);
-					System.out.println("번호" + "  //  " + "제목" + "     //   " + "조회");
+
 					System.out.println(article.id + "    //  " + article.title + "   //   " + article.hitCount);
 				}
 
@@ -140,13 +140,46 @@ public class Main {
 				articles.add(article);
 
 			} else if (command.equals("member join")) {
-				System.out.print("아이디 : ");
-				String memberId = sc.nextLine();
-				System.out.print("패스워드 : ");
-				String memberPw = sc.nextLine();
+				int id = lastMemberId + 1;
+				String regDate = Util.getNowDateTimeStr();
+				String loginId = null;
+				while (true) {
+					System.out.print("로그인 아이디 : ");
+					loginId = sc.nextLine();
 
-				Member member = new Member(memberId, memberPw);
+					if (isJoinableLoginId(loginId) == false) {
+						System.out.println("이미 사용중인 아이디입니다");
+						continue;
+					}
+
+					break;
+
+				}
+				String loginPw = null;
+				String loginPwConfirm = null;
+
+				while (true) {
+					System.out.print("로그인 비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.print("로그인 비밀번호 확인: ");
+					loginPwConfirm = sc.nextLine();
+
+					if (loginPw.equals(loginPwConfirm) == false) {
+						System.out.println("비밀번호를 확인해주세요");
+						continue;
+					}
+					break;
+				}
+
+				System.out.print("이름 : ");
+				String name = sc.nextLine();
+
+				Member member = new Member(id, regDate, regDate, loginId, loginPw, name);
 				members.add(member);
+
+				System.out.printf("%d번 회원이 가입되었습니다\n", id);
+				lastMemberId++;
+
 			}
 
 			else {
@@ -160,6 +193,25 @@ public class Main {
 
 		sc.close();
 
+	}
+
+	private static boolean isJoinableLoginId(String loginId) {
+		int index = getMemberIndexById(loginId);
+		if (index == -1) {
+			return true;
+		}
+		return false;
+	}
+
+	private static int getMemberIndexById(String loginId) {
+		int i = 0;
+		for (Member member : members) {
+			if (member.loginId.equals(loginId)) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 
 	public static int getArticeIndexbyId(int id) {
@@ -223,13 +275,19 @@ public class Main {
 }
 
 class Member {
+	int id;
+	String regDate;
+	String updateDate;
+	String loginId;
+	String loginPw;
+	String name;
 
-	String memberId;
-	String memberPw;
-
-	public Member(String memberId, String memberPw) {
-		this.memberId = memberId;
-		this.memberPw = memberPw;
+	Member(int id, String regDate, String updateDate, String loginId, String loginPw, String name) {
+		this.id = id;
+		this.regDate = regDate;
+		this.updateDate = updateDate;
+		this.loginId = loginId;
+		this.loginPw = loginPw;
+		this.name = name;
 	}
-
 }
