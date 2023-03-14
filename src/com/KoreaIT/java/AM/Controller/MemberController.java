@@ -13,8 +13,6 @@ public class MemberController extends Controller {
 	private String command;
 	private String actionMethodName;
 
-	private Member loginedMember = null;
-
 	int lastMemberId = 0;
 
 	public MemberController(Scanner sc) {
@@ -136,10 +134,6 @@ public class MemberController extends Controller {
 
 		System.out.printf("%d번 회원이 가입되었습니다\n", id);
 		lastMemberId++;
-	}
-
-	private boolean isLogined() {
-		return loginedMember != null;
 	}
 
 	private Member getMemberByLoginId(String loginId) {

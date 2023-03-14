@@ -13,6 +13,8 @@ public class ArticleController extends Controller {
 	private String command;
 	private String actionMethodName;
 
+	int lastArticleId = 3;
+
 	public ArticleController(Scanner sc) {
 		this.articles = new ArrayList<>();
 		this.sc = sc;
@@ -24,6 +26,10 @@ public class ArticleController extends Controller {
 
 		switch (actionMethodName) {
 		case "write":
+			if (isLogined() == false) {
+				System.out.println("로그인 상태가 아닙니다");
+				break;
+			}
 			doWrite();
 			break;
 		case "list":
@@ -38,12 +44,13 @@ public class ArticleController extends Controller {
 		case "delete":
 			doDelete();
 			break;
+		default:
+			System.out.println("해당 기능은 사용할 수 없습니다");
+			break;
 		}
 	}
 
-	int lastArticleId = 3;
-
-	public void doWrite() {
+	private void doWrite() {
 		int id = lastArticleId + 1;
 		System.out.print("제목 : ");
 		String regDate = Util.getNowDateTimeStr();
@@ -58,7 +65,7 @@ public class ArticleController extends Controller {
 		lastArticleId++;
 	}
 
-	public void showList() {
+	private void showList() {
 		if (articles.size() == 0) {
 			System.out.println("게시글이 없습니다");
 			return;
@@ -91,7 +98,7 @@ public class ArticleController extends Controller {
 
 	}
 
-	public void showDetail() {
+	private void showDetail() {
 		String[] cmdDiv = command.split(" ");
 
 		if (cmdDiv.length < 3) {
@@ -118,7 +125,7 @@ public class ArticleController extends Controller {
 		System.out.println("조회 : " + foundArticle.hit);
 	}
 
-	public void doModify() {
+	private void doModify() {
 		String[] cmdDiv = command.split(" ");
 
 		if (cmdDiv.length < 3) {
@@ -147,7 +154,7 @@ public class ArticleController extends Controller {
 		System.out.println(id + "번 글을 수정했습니다");
 	}
 
-	public void doDelete() {
+	private void doDelete() {
 		String[] cmdDiv = command.split(" ");
 
 		if (cmdDiv.length < 3) {
