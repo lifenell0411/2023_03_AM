@@ -31,11 +31,11 @@ public class MemberController extends Controller {
 		case "login":
 			doLogin();
 			break;
-		case "logout":
-			doLogout();
-			break;
 		case "profile":
 			showProfile();
+			break;
+		case "logout":
+			doLogout();
 			break;
 		default:
 			System.out.println("해당 기능은 사용할 수 없습니다");
@@ -43,15 +43,17 @@ public class MemberController extends Controller {
 		}
 	}
 
+	private void doLogout() {
+
+		loginedMember = null;
+		System.out.println("로그아웃 되었습니다");
+	}
+
 	private void showProfile() {
 
 		System.out.println("== 현재 로그인 한 회원의 정보 ==");
-		System.out.println("로그인아이디 : " + loginedMember.loginId);
-		System.out.println("이름 : " + loginedMember.name);
-
-	}
-
-	private void doLogout() {
+		System.out.printf("로그인 아이디 : %s\n", loginedMember.loginId);
+		System.out.printf("이름 : %s\n", loginedMember.name);
 
 	}
 
@@ -61,32 +63,28 @@ public class MemberController extends Controller {
 		String loginId = sc.nextLine();
 		System.out.print("로그인 비밀번호 : ");
 		String loginPw = sc.nextLine();
+
 		Member member = getMemberByLoginId(loginId);
-		if (loginedMember == null) {
-			if (member == null) {
-				System.out.println("일치하는 회원이 없습니다");
-				return;
-			}
 
-			if (member.loginPw.equals(loginPw) == false) {
-				System.out.println("비밀번호가 일치하지 않습니다");
-				return;
-			}
-
-			loginedMember = member;
-			System.out.printf("로그인 성공! %s님 반갑습니다\n", loginedMember.name);
+		if (member == null) {
+			System.out.println("일치하는 회원이 없습니다");
+			return;
 		}
+
+		if (member.loginPw.equals(loginPw) == false) {
+			System.out.println("비밀번호가 일치하지 않습니다");
+			return;
+		}
+
+		loginedMember = member;
+		System.out.printf("로그인 성공! %s님 반갑습니다\n", loginedMember.name);
 	}
 
 	private void doJoin() {
+
 		int id = lastMemberId + 1;
 		String regDate = Util.getNowDateTimeStr();
 		String loginId = null;
-
-		if (loginedMember != null) {
-			System.out.println("로그아웃후 이용해주세요");
-			return;
-		}
 		while (true) {
 			System.out.print("로그인 아이디 : ");
 			loginId = sc.nextLine();
@@ -155,12 +153,11 @@ public class MemberController extends Controller {
 		return -1;
 	}
 
-	public void makeTestDate() {
+	public void makeTestData() {
 		System.out.println("테스트를 위한 회원 데이터를 생성합니다");
-		members.add(new Member(1, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test1", "test1", "홍길동"));
-		members.add(new Member(1, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test2", "test2", "홍길순"));
-		members.add(new Member(1, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test3", "test3", "김덕팔"));
-
+		members.add(new Member(1, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test1", "test1", "김철수"));
+		members.add(new Member(2, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test2", "test2", "김영희"));
+		members.add(new Member(3, Util.getNowDateTimeStr(), Util.getNowDateTimeStr(), "test3", "test3", "홍길동"));
 	}
 
 }

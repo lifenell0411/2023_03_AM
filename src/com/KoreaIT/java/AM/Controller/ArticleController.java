@@ -26,7 +26,6 @@ public class ArticleController extends Controller {
 
 		switch (actionMethodName) {
 		case "write":
-
 			doWrite();
 			break;
 		case "list":
@@ -36,11 +35,9 @@ public class ArticleController extends Controller {
 			showDetail();
 			break;
 		case "modify":
-
 			doModify();
 			break;
 		case "delete":
-
 			doDelete();
 			break;
 		default:
@@ -127,7 +124,6 @@ public class ArticleController extends Controller {
 	}
 
 	private void doModify() {
-
 		String[] cmdDiv = command.split(" ");
 
 		if (cmdDiv.length < 3) {
@@ -144,11 +140,10 @@ public class ArticleController extends Controller {
 			return;
 		}
 
-		if (loginedMember.id != foundArticle.memberId) {
+		if (foundArticle.memberId != loginedMember.id) {
 			System.out.println("권한이 없습니다.");
-		}
-
-		else {
+			return;
+		} else {
 			System.out.print("새 제목 : ");
 			String updateDate = Util.getNowDateTimeStr();
 			String newTitle = sc.nextLine();
@@ -172,17 +167,20 @@ public class ArticleController extends Controller {
 		}
 
 		int id = Integer.parseInt(cmdDiv[2]);
+		Article foundArticle = getArticleById(id);
 
-		int foundIndex = getArticleIndexById(id);
-
-		if (foundIndex == -1) {
+		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
+		if (foundArticle.memberId != loginedMember.id) {
+			System.out.println("권한이 없습니다.");
+			return;
+		} else {
+			articles.remove(foundArticle);
+			System.out.println(id + "번 글을 삭제했습니다");
 
-		articles.remove(foundIndex);
-		System.out.println(id + "번 글을 삭제했습니다");
-
+		}
 	}
 
 	private int getArticleIndexById(int id) {
