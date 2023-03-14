@@ -44,10 +44,7 @@ public class MemberController extends Controller {
 	}
 
 	private void showProfile() {
-		if (isLogined() == false) {
-			System.out.println("로그인 후 이용해주세요");
-			return;
-		}
+
 		System.out.println("== 현재 로그인 한 회원의 정보 ==");
 		System.out.println("로그인아이디 : " + loginedMember.loginId);
 		System.out.println("이름 : " + loginedMember.name);
@@ -55,19 +52,10 @@ public class MemberController extends Controller {
 	}
 
 	private void doLogout() {
-		if (isLogined() == false) {
-
-			System.out.println("로그인 상태가 아닙니다.");
-		}
 
 	}
 
 	private void doLogin() {
-
-		if (isLogined()) {
-			System.out.println("이미 로그인 상태입니다.");
-			return;
-		}
 
 		System.out.print("로그인 아이디 : ");
 		String loginId = sc.nextLine();

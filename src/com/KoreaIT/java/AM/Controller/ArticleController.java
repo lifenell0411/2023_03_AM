@@ -26,31 +26,21 @@ public class ArticleController extends Controller {
 
 		switch (actionMethodName) {
 		case "write":
-			if (isLogined() == false) {
-				System.out.println("로그인 상태가 아닙니다");
-				break;
-			}
+
 			doWrite();
 			break;
 		case "list":
 			showList();
 			break;
 		case "detail":
-
 			showDetail();
 			break;
 		case "modify":
-			if (isLogined() == false) {
-				System.out.println("로그인 상태가 아닙니다");
-				break;
-			}
+
 			doModify();
 			break;
 		case "delete":
-			if (isLogined() == false) {
-				System.out.println("로그인 상태가 아닙니다");
-				break;
-			}
+
 			doDelete();
 			break;
 		default:
@@ -67,7 +57,7 @@ public class ArticleController extends Controller {
 		System.out.print("내용 : ");
 		String body = sc.nextLine();
 
-		Article article = new Article(id, regDate, regDate,loginedMember.id, title, body);
+		Article article = new Article(id, regDate, regDate, loginedMember.id, title, body);
 		articles.add(article);
 
 		System.out.printf("%d번글이 생성되었습니다\n", id);
@@ -99,10 +89,11 @@ public class ArticleController extends Controller {
 			}
 		}
 
-		System.out.println(" 번호  //  제목    //  조회  ");
+		System.out.println(" 번호  //  제목    //  조회      //  작성자");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			Article article = forPrintArticles.get(i);
-			System.out.printf("  %d   //   %s   //   %d  \n", article.id, article.title, article.hit);
+			System.out.printf("  %d   //   %s   //   %d     //   %d\n", article.id, article.title, article.hit,
+					article.memberId);
 		}
 
 	}
@@ -129,12 +120,14 @@ public class ArticleController extends Controller {
 		System.out.println("번호 : " + foundArticle.id);
 		System.out.println("작성날짜 : " + foundArticle.regDate);
 		System.out.println("수정날짜 : " + foundArticle.updateDate);
+		System.out.println("작성자 : " + foundArticle.memberId);
 		System.out.println("제목 : " + foundArticle.title);
 		System.out.println("내용 : " + foundArticle.body);
 		System.out.println("조회 : " + foundArticle.hit);
 	}
 
 	private void doModify() {
+
 		String[] cmdDiv = command.split(" ");
 
 		if (cmdDiv.length < 3) {
@@ -150,17 +143,24 @@ public class ArticleController extends Controller {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-		System.out.print("새 제목 : ");
-		String updateDate = Util.getNowDateTimeStr();
-		String newTitle = sc.nextLine();
-		System.out.print("새 내용 : ");
-		String newBody = sc.nextLine();
 
-		foundArticle.title = newTitle;
-		foundArticle.body = newBody;
-		foundArticle.updateDate = updateDate;
+		if (loginedMember.id != foundArticle.memberId) {
+			System.out.println("권한이 없습니다.");
+		}
 
-		System.out.println(id + "번 글을 수정했습니다");
+		else {
+			System.out.print("새 제목 : ");
+			String updateDate = Util.getNowDateTimeStr();
+			String newTitle = sc.nextLine();
+			System.out.print("새 내용 : ");
+			String newBody = sc.nextLine();
+
+			foundArticle.title = newTitle;
+			foundArticle.body = newBody;
+			foundArticle.updateDate = updateDate;
+
+			System.out.println(id + "번 글을 수정했습니다");
+		}
 	}
 
 	private void doDelete() {
