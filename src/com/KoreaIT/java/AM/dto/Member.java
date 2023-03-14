@@ -5,6 +5,8 @@ public class Member extends Dto {
 	public String loginPw;
 	public String name;
 
+ 
+	
 	public Member(int id, String regDate, String updateDate, String loginId, String loginPw, String name) {
 		this.id = id;
 		this.regDate = regDate;
