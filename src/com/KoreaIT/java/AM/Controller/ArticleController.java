@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.KoreaIT.java.AM.Util;
+import com.KoreaIT.java.AM.container.Container;
 import com.KoreaIT.java.AM.dto.Article;
+import com.KoreaIT.java.AM.dto.Member;
 
 public class ArticleController extends Controller {
 	List<Article> articles;
@@ -16,7 +18,7 @@ public class ArticleController extends Controller {
 	int lastArticleId = 3;
 
 	public ArticleController(Scanner sc) {
-		this.articles = new ArrayList<>();
+		this.articles = Container.articleDao.articles;
 		this.sc = sc;
 	}
 
@@ -88,9 +90,20 @@ public class ArticleController extends Controller {
 
 		System.out.println(" 번호  //  제목    //  조회      //  작성자");
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
+
+			String writerName = null;
+
+			List<Member> members = Container.memberDao.members;
 			Article article = forPrintArticles.get(i);
-			System.out.printf("  %d   //   %s   //   %d     //   %d\n", article.id, article.title, article.hit,
-					article.memberId);
+			for (Member member : members) {
+				if (article.memberId == member.id) {
+					writerName = member.name;
+					break;
+				}
+			}
+
+			System.out.printf("  %d   //   %s   //   %d     //   %s\n", article.id, article.title, article.hit,
+					writerName);
 		}
 
 	}
@@ -141,21 +154,21 @@ public class ArticleController extends Controller {
 		}
 
 		if (foundArticle.memberId != loginedMember.id) {
-			System.out.println("권한이 없습니다.");
+			System.out.println("권한이 없습니다");
 			return;
-		} else {
-			System.out.print("새 제목 : ");
-			String updateDate = Util.getNowDateTimeStr();
-			String newTitle = sc.nextLine();
-			System.out.print("새 내용 : ");
-			String newBody = sc.nextLine();
-
-			foundArticle.title = newTitle;
-			foundArticle.body = newBody;
-			foundArticle.updateDate = updateDate;
-
-			System.out.println(id + "번 글을 수정했습니다");
 		}
+
+		System.out.print("새 제목 : ");
+		String updateDate = Util.getNowDateTimeStr();
+		String newTitle = sc.nextLine();
+		System.out.print("새 내용 : ");
+		String newBody = sc.nextLine();
+
+		foundArticle.title = newTitle;
+		foundArticle.body = newBody;
+		foundArticle.updateDate = updateDate;
+
+		System.out.println(id + "번 글을 수정했습니다");
 	}
 
 	private void doDelete() {
@@ -167,20 +180,22 @@ public class ArticleController extends Controller {
 		}
 
 		int id = Integer.parseInt(cmdDiv[2]);
+
 		Article foundArticle = getArticleById(id);
 
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-		if (foundArticle.memberId != loginedMember.id) {
-			System.out.println("권한이 없습니다.");
-			return;
-		} else {
-			articles.remove(foundArticle);
-			System.out.println(id + "번 글을 삭제했습니다");
 
+		if (foundArticle.memberId != loginedMember.id) {
+			System.out.println("권한이 없습니다");
+			return;
 		}
+
+		articles.remove(foundArticle);
+		System.out.println(id + "번 글을 삭제했습니다");
+
 	}
 
 	private int getArticleIndexById(int id) {

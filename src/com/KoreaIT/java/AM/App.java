@@ -7,10 +7,6 @@ import com.KoreaIT.java.AM.Controller.Controller;
 import com.KoreaIT.java.AM.Controller.MemberController;
 
 public class App {
-
-	public App() {
-	}
-
 	public void start() {
 		System.out.println("==프로그램 시작==");
 
@@ -73,7 +69,7 @@ public class App {
 				}
 				break;
 			}
-			
+
 			switch (forLoginCheck) {
 			case "member/login":
 			case "member/join":
