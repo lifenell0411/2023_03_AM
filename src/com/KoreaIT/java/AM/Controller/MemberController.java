@@ -13,8 +13,6 @@ public class MemberController extends Controller {
 	private String command;
 	private String actionMethodName;
 
-	int lastMemberId = 0;
-
 	public MemberController(Scanner sc) {
 		this.members = Container.memberDao.members;
 		this.sc = sc;
@@ -50,6 +48,7 @@ public class MemberController extends Controller {
 
 	private void showProfile() {
 		System.out.println("== 현재 로그인 한 회원의 정보 ==");
+		System.out.printf("나의 회원번호 : %s\n", loginedMember.id);
 		System.out.printf("로그인 아이디 : %s\n", loginedMember.loginId);
 		System.out.printf("이름 : %s\n", loginedMember.name);
 
@@ -79,7 +78,7 @@ public class MemberController extends Controller {
 
 	private void doJoin() {
 
-		int id = lastMemberId + 1;
+		int id = Container.articleDao.setNewId();
 		String regDate = Util.getNowDateTimeStr();
 		String loginId = null;
 		while (true) {
@@ -113,10 +112,10 @@ public class MemberController extends Controller {
 		String name = sc.nextLine();
 
 		Member member = new Member(id, regDate, regDate, loginId, loginPw, name);
-		members.add(member);
+		Container.memberDao.add(member);
 
 		System.out.printf("%d번 회원이 가입되었습니다\n", id);
-		lastMemberId++;
+
 	}
 
 	private Member getMemberByLoginId(String loginId) {
