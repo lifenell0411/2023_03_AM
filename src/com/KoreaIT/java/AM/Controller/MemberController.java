@@ -55,25 +55,38 @@ public class MemberController extends Controller {
 	}
 
 	private void doLogin() {
-		System.out.print("로그인 아이디 : ");
-		String loginId = sc.nextLine();
-		System.out.print("로그인 비밀번호 : ");
-		String loginPw = sc.nextLine();
 
-		Member member = getMemberByLoginId(loginId);
+		while (true) {
+			System.out.print("로그인 아이디 : ");
+			String loginId = sc.nextLine();
 
-		if (member == null) {
-			System.out.println("일치하는 회원이 없습니다");
-			return;
+			if (loginId.length() == 0) {
+				System.out.println("아이디를 입력해주세요");
+				continue;
+			}
+
+			System.out.print("로그인 비밀번호 : ");
+			String loginPw = sc.nextLine();
+			if (loginPw.length() == 0) {
+				System.out.println("비밀번호를 입력해주세요");
+				continue;
+			}
+
+			Member member = getMemberByLoginId(loginId);
+
+			if (member == null) {
+				System.out.println("일치하는 회원이 없습니다");
+				return;
+			}
+
+			if (member.loginPw.equals(loginPw) == false) {
+				System.out.println("비밀번호가 일치하지 않습니다");
+				return;
+			}
+
+			loginedMember = member;
+			System.out.printf("로그인 성공! %s님 반갑습니다\n", loginedMember.name);
 		}
-
-		if (member.loginPw.equals(loginPw) == false) {
-			System.out.println("비밀번호가 일치하지 않습니다");
-			return;
-		}
-
-		loginedMember = member;
-		System.out.printf("로그인 성공! %s님 반갑습니다\n", loginedMember.name);
 	}
 
 	private void doJoin() {
@@ -84,6 +97,10 @@ public class MemberController extends Controller {
 		while (true) {
 			System.out.print("로그인 아이디 : ");
 			loginId = sc.nextLine();
+			if (loginId.length() == 0) {
+				System.out.println("아이디를 입력해주세요");
+				continue;
+			}
 
 			if (isJoinableLoginId(loginId) == false) {
 				System.out.println("이미 사용중인 아이디입니다");
@@ -98,23 +115,34 @@ public class MemberController extends Controller {
 		while (true) {
 			System.out.print("로그인 비밀번호 : ");
 			loginPw = sc.nextLine();
+			if (loginPw.length() == 0) {
+				System.out.println("비밀번호를 입력해주세요");
+				continue;
+			}
+
 			System.out.print("로그인 비밀번호 확인: ");
 			loginPwConfirm = sc.nextLine();
+			if (loginPw.length() == 0) {
+				System.out.println("비밀번호를 입력해주세요");
+				continue;
+			}
 
 			if (loginPw.equals(loginPwConfirm) == false) {
 				System.out.println("비밀번호를 확인해주세요");
 				continue;
 			}
+			System.out.print("이름 : ");
+			String name = sc.nextLine();
+			if (name.length() == 0) {
+				System.out.println("이름을 입력해주세요");
+				continue;
+			}
+			Member member = new Member(id, regDate, regDate, loginId, loginPw, name);
+			Container.memberDao.add(member);
+
+			System.out.printf("%d번 회원이 가입되었습니다\n", id);
 			break;
 		}
-
-		System.out.print("이름 : ");
-		String name = sc.nextLine();
-
-		Member member = new Member(id, regDate, regDate, loginId, loginPw, name);
-		Container.memberDao.add(member);
-
-		System.out.printf("%d번 회원이 가입되었습니다\n", id);
 
 	}
 
