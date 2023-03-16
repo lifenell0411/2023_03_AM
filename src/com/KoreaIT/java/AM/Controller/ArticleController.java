@@ -17,10 +17,11 @@ public class ArticleController extends Controller {
 	private String actionMethodName;
 	private ArticleService articleService;
 	private MemberService memberService;
-	
+
 	public ArticleController(Scanner sc) {
 		this.sc = sc;
 		articleService = Container.articleService;
+		memberService = Container.memberService;
 	}
 
 	public void doAction(String actionMethodName, String command) {
@@ -78,7 +79,7 @@ public class ArticleController extends Controller {
 		for (int i = forPrintArticles.size() - 1; i >= 0; i--) {
 			String writerName = null;
 
-			List<Member> members = Container.memberDao.members;
+			List<Member> members = memberService.getMembers();
 			Article article = forPrintArticles.get(i);
 
 			for (Member member : members) {
@@ -113,7 +114,7 @@ public class ArticleController extends Controller {
 
 		String writerName = null;
 
-		List<Member> members = Container.memberDao.members;
+		List<Member> members = memberService.getMembers();
 
 		for (Member member : members) {
 			if (foundArticle.memberId == member.id) {
